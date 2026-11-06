@@ -1,17 +1,19 @@
 import pandas as pd
 import numpy as np
 
-ruta_csv = "ventas.csv"
+
+ruta_csv = "Ventas.csv"
 df = pd.read_csv(ruta_csv)
 
 print("--- 1. CARGA EXITOSA ---")
 print(f"Dataset cargado correctamente desde: {ruta_csv}\n")
 
 
+
 print("--- 2. EXPLORACIÓN ---")
 
 
-print("A) Primeros 5 registros:")
+print("B) Primeros 5 registros:")
 print(df.head(), "\n")
 
 
@@ -36,80 +38,76 @@ print(df.describe(), "\n")
 print("--- 3. SELECCIÓN ---")
 
 columnas_seleccionadas = df[['producto', 'ventas']]
-print("A) Selección de dos columnas:")
-print(columnas_seleccionadas.head(), "\n")
-
-filtro_simple = df[df['ventas'] > 100]
-print("B) Filtro con una condición (Ventas > 100):")
-print(filtro_simple.head(), "\n")
+print("A) Selección de dos columnas (producto y ventas):")
+print(columnas_seleccionadas, "\n")
 
 
-filtro_compuesto = df[(df['ventas'] > 100) & (df['cantidad'] > 2)]
-print("C) Filtro combinado (Ventas > 100 AND Cantidad > 2):")
-print(filtro_compuesto.head(), "\n")
+filtro_simple = df[df['ventas'] > 1000000]
+print("B) Filtro con una condición (Ventas > 1,000,000):")
+print(filtro_simple, "\n")
+
+filtro_compuesto = df[(df['region'] == 'Norte') & (df['unidades'] >= 5)]
+print("C) Filtro combinado (Región 'Norte' AND Unidades >= 5):")
+print(filtro_compuesto, "\n")
+
 
 
 print("--- 4. LIMPIEZA ---")
 
 
-print("A) Valores faltantes por columna antes de la limpieza:")
+print("A) Valores faltantes por columna:")
 print(df.isnull().sum(), "\n")
 
 
-if df['ventas'].isnull().sum() > 0:
-    mediana_ventas = df['ventas'].median()
-    df['ventas'] = df['ventas'].fillna(mediana_ventas)
-    print(f"-> Se reemplazaron los nulos de 'ventas' con la mediana: {mediana_ventas}")
-
 
 duplicados_totales = df.duplicated().sum()
-print(f"B) Cantidad de registros completamente duplicados detectados: {duplicados_totales}")
-
+print(f"B) Cantidad de registros completamente duplicados: {duplicados_totales}")
 if duplicados_totales > 0:
     df = df.drop_duplicates()
-    print("-> Registros duplicados eliminados con éxito.\n")
+    print("-> Registros duplicados eliminados.\n")
 else:
-    print("-> No se requirió eliminación de duplicados.\n")
-
+    print("-> No se encontraron registros duplicados.\n")
 
 
 print("--- 5. ANÁLISIS ---")
 
+promedio_v = df['ventas'].mean()
+minimo_v = df['ventas'].min()
+maximo_v = df['ventas'].max()
+total_v = df['ventas'].sum()
 
-promedio = df['ventas'].mean()
-minimo = df['ventas'].min()
-maximo = df['ventas'].max()
-total = df['ventas'].sum()
-
-print(f"A) Estadísticas de la columna 'ventas':")
-print(f"   - Promedio: {promedio:.2f}")
-print(f"   - Mínimo: {minimo}")
-print(f"   - Máximo: {maximo}")
-print(f"   - Total acumulado: {total}\n")
+print(f"A) Estadísticas generales de la columna 'ventas':")
+print(f"   - Promedio de ventas: ${promedio_v:,.2f}")
+print(f"   - Venta mínima: ${minimo_v:,}")
+print(f"   - Venta máxima: ${maximo_v:,}")
+print(f"   - Total acumulado: ${total_v:,}\n")
 
 
-print("B) Agrupación por 'categoria' y su precio promedio:")
-agrupado = df.groupby('categoria')['ventas'].mean()
-print(agrupado, "\n")
+print("B) Total de ventas agrupado por 'categoria':")
+agrupado_cat = df.groupby('categoria')['ventas'].sum()
+print(agrupado_cat, "\n")
 
 
 print("--- 6. NUMPY ---")
 
-arreglo_ventas = df['ventas'].to_numpy()
-print("A) Columna convertida a arreglo de NumPy (primeros 5 elementos):")
-print(arreglo_ventas[:5], "\n")
 
-ventas_con_impuesto = arreglo_ventas * 1.16
-print("B) Operación vectorizada (Ventas con 16% de impuesto - primeros 5):")
-print(ventas_con_impuesto[:5], "\n")
+arreglo_ventas = df['ventas'].to_numpy()
+print("A) Columna 'ventas' convertida a arreglo de NumPy:")
+print(arreglo_ventas, "\n")
+
+
+iva_ventas = arreglo_ventas * 0.19
+print("B) Operación vectorizada (Cálculo del 19% de IVA por registro):")
+print(iva_ventas, "\n")
+
 
 promedio_np = np.mean(arreglo_ventas)
 mediana_np = np.median(arreglo_ventas)
 desviacion_np = np.std(arreglo_ventas)
 
-print("C) Métricas calculadas con NumPy:")
-print(f"   - Promedio (NumPy): {promedio_np:.2f}")
-print(f"   - Mediana (NumPy): {mediana_np:.2f}")
-print(f"   - Desviación Estándar (NumPy): {desviacion_np:.2f}\n")
+print("C) Métricas de ventas calculadas con NumPy:")
+print(f"   - Promedio: ${promedio_np:,.2f}")
+print(f"   - Mediana: ${mediana_np:,.2f}")
+print(f"   - Desviación Estándar: ${desviacion_np:,.2f}\n")
 
 print("--- FIN DEL ANALIZADOR ---")
