@@ -1,0 +1,7 @@
+producto,categoria,ventas,unidades,region
+Laptop,Tecnologia,3500000,5,Norte
+Mouse,Accesorios,250000,10,Sur
+Teclado,Accesorios,450000,8,Norte
+Monitor,Tecnologia,1800000,3,Centro
+Tablet,Tecnologia,1200000,4,Sur
+Audifonos,Accesorios,350000,6,Norte
